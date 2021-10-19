@@ -1,0 +1,30 @@
+matplotlib
+inflect
+unidecode
+sounddevice
+librosa
+torch
+nltk
+PyYAML
+numpy
+graphviz
+cython
+pyzmq
+pyaudio
+pynput
+PyInquirer
+parallel-wavegan
+g2p_en
+configargparse
+Xlib
+zmq
+sklearn
+dlib
+imutils
+liac-arff
+lxml
+requests
+torchvision
+torchaudio
+# pillow
+# opencv-python

@@ -1,0 +1,239 @@
+# ---------------NEW RULES - Space Jam MESSAGES-------------------------#
+# --------------Templates for System General Acts-----------------------#
+template welcomemsg(variant): "Hello, let's get started!"
+template bad(variant): "I'm sorry, I didn't understand. Please rephrase?"
+template closingmsg(variant): "Goodbye!"
+template closingmsg(condition, user_id, variant):
+    if condition = "win": "Thanks for playing, don't forget your user id for the questionnaire is: {user_id}!"
+template slowdown(variant): "I can't process the information this fast, please only tell me one thing at a time."
+template confirmrestart(variant): "Should this module really be restarted?"
+
+# --------- Helper Functions -------- #
+
+function cap_name(name)
+	"{cap_name(name)}"
+
+function decode_position(position)
+    if position = "0": "first"
+    if position = "1": "second"
+    if position = "2": "third"
+    if position = "3": "fourth"
+    if position = "4": "fifth"
+    if position = "last": "last"
+    if position = "last_blue": "last blue"
+    if position = "first_blue": "first blue"
+    if position = "last_green": "first green"
+    if position = "second_last": "second to last"
+
+function serialize_list(values)
+    "{for(values, "placeholder", ", ", ", ")}"
+
+function placeholder(value)
+    "{value}"
+
+function decode_number(number)
+    "{number}"
+    if number = "0": "no"
+    if number = "1": "one"
+    if number = "2": "two"
+    if number = "3": "three"
+    if number = "4": "four"
+    if number = "5": "five"
+    if number = "6": "six"
+    if number = "7": "seven"
+    if number = "8": "eight"
+    if number = "9": "nine"
+    if number = "10": "ten"
+    if number = "11": "eleven"
+    if number = "12": "twelve"
+
+function describe(module)
+    if module = "dials module": "This module is made up of one or more half circle dials, do you see it?"
+    if module = "button sequence module": "There should be a single row of five buttons somewhere on the dashboard, do you see it?"
+    if module = "switches module": "There should be a stack of four switches somewhere on the dashboard, do you see it?"
+    if module = "button array module": "This module is a 3 x 4 array of buttons. Do you see it?"
+    if module = "slider": "The slider is a vertical bar with the following colored sections: green, yellow, amber, orange, red. There should be a pointer indicating the current slider level. Do you see it?"
+    if module = "warp_drive_percent": "The Warp Drive Power is given as a percentage somewhere on the dashboard, do you see it?"
+
+function decode_module(module)
+    if module = "dials module": "Dials Module"
+    if module = "button sequence module": "Button Sequence Module"
+    if module = "switches module": "Switches Module"
+    if module = "button array module": "Button Array Module"
+    if module = "slider": "Slider"
+
+function info_by_module(slot, value, module)
+    if slot = "num_half_dials": "there are {value} half dials"
+#    if slot = "num_full_dials": "there are {value} full dials"
+    if slot = "left_dial_pointer": "the left dial pointer points to the {value}"
+    if slot = "right_dial_pointer": "the right dial pointer points to the {value}"
+    if slot = "left_dial_number": "the marked number in the left dial is {value}"
+    if slot = "right_dial_number": "the marked number in the right dial is {value}"
+    if slot = "active_column": "the active button is in the {decode_position(value)} column"
+    if slot = "slider": "the slider is {value}"
+    if slot = "warp_drive_percent": "there is {multiply_by_hundred(value)}% warp drive power left"
+    if slot = "seq_len": "there are {decode_number(value)} clickable buttons"
+    if slot = "color_seq"
+        "the color sequence is {serialize_list(value)}"
+        if module = "button sequence module": "the order of the clickable buttons is {serialize_list(value)}"
+        if module = "switches module": "the order of the switches is {serialize_list(value)}"
+
+function info(slot, value)
+    if slot = "num_half_dials": "there are {decode_number(value)} half dials"
+    if slot = "slider": "the slider color is {value}"
+    if slot = "left_dial_number": "the left dial pointer is pointing to the number {value}"
+    if slot = "right_dial_pointer": "the right dial pointer is pointing to the {value}"
+    if slot = "seq_len": "there are {decode_number(value)} clickable buttons"
+    if slot = "color_seq": "the color sequence is {serialize_list(value)}"
+    if slot = "active_column": "the active button was in the {decode_position(value)} column"
+    if slot = "current_round": "this is the {decode_position(value)} stage"
+
+#------------------Templates for RequestMore Act------------------------#
+template reqmore(variant): "I appologize, what was the mistake?"
+template reqmore(color_seq, variant): "I appologize, is the color sequence not: {serialize_list(color_seq)}. Where was the mistake?"
+
+#------------------Templates for System Requests------------------------#
+template request(object, position, variant)
+    if object = "column": "Which column is the active button in?"
+    if object = "left_dial": "Which direction is the pointer on the left dial pointing? (left, right, or middle)?"
+    if object = "right_dial": "Which direction is the pointer on the right dial pointing? (left, right, or middle)?"
+
+template request(color, object, position, variant)
+    if object = "switch": "What color is the {decode_position(position)} switch?"
+    if object = "enabled_button": "What color is the {decode_position(position)} clickable button? Clickable buttons have a blue, amber, or green border."
+
+template request(color, object, position, variant)
+    if object = "enabled_button": "What color is the {decode_position(position)} clickable button? Clickable buttons have a blue, amber, or green border."
+
+template request(object, number, variant, describe)
+    if object = "half_dial": "There can only be on or two dials, how many are there?"
+    if object = "enabled_button": "There can be at most 5 clickable (colored border) buttons. How many clickable (color border) buttons are there?"
+
+template request(object, number, count, variant)
+    if object = "left_dial"
+        if count = "1": "What number is the pointer on the dial pointing to?"
+
+template request(object, number, variant)
+    if object = "half_dial": "How many half dials are there? There should be either one or two."
+#    if object = "full_dial":"How many full circle dials are there?"
+    if object = "left_dial": "What number is the pointer on the left dial pointing to?"
+    if object = "right_dial": "What number is the pointer on the right dial pointing to?"
+
+template request(object, color, variant)
+    if object = "slider": "What color is the slider?"
+
+template request(position, object, color, variant, not_grey)
+    "If the button is solid grey, that means it's not clickable. What color is the {decode_position(position)} clickable (colorful border) button?"
+
+
+template request(restart, variant)
+    "I appologize, I do not know which button that was. Perhaps activating a random button would work. "
+
+
+
+#-------------Templates for System Inform---------------#
+
+template inform(object, action, variant)
+    if object = "dials"
+        if action = "point_middle": "Therefore, both pointers should be set to the middle position."
+        if action = "largest_odd": "Therefore, both pointers should be set to the largest odd number in each dial."
+        if action = "one_left_one_right": "Therefore, the pointer of the left dial should be moved one position to the right, and the pointer of the right dial should be moved one position to the left."
+        if action = "far_left_far_right": "Therefore, the pointer of the left dial should be moved to the  far left, and the pointer of the right dial should be moved to the far right position."
+        if action = "point_left": "Therefore, the pointer should be set to the far left position."
+        if action = "greater_ten": "Therefore, the pointer should be set to the smallest number which is greater than ten."
+        if action = "smallest_odd": "Therefore, the pointer should be set to the smallest odd number."
+        if action = "point_right": "Therefore, the pointer should be set to the far right position." 
+    if object = "column"
+        if action = "button_round_1": "Therefore, the same button should be activated as in the first round."
+        if action = "button_round_2": "Therefore, the same button should be activated as in the second round."
+        if action = "button_round_3": "Therefore, the same button should be activated as in the third round."
+        if action = "color_round_2": "Therefore, the first button in the second column with the same color as the button activated in the second round should now be activated."
+
+
+template inform(object, position, variant)
+    if object = "enabled_button": "Therefore, the {decode_position(position)} button should be activated."
+
+template inform(object, position, action, variant)
+    if object = "switch": "Therefore, for the {decode_position(position)} switch, the {action} side should be activated."
+    if object = "column"
+        if action = "first_button_same_color": "Therefore, the first button which has the same color as the active button and is in the {decode_position(position)} row should be activated."
+        if action = "last_button_same_color": "Therefore, the last button which has the same color as the active button and is in the {decode_position(position)} row should be activated."
+        if action = "second_button": "Therefore, the second button in the {decode_position(position)} row should be activated."
+
+
+#-------------Templates for System Describe---------------#
+template describe(color, verbose, variant)
+    "Colors for Buttons and Switchs are: Blue, Green, or Amber. Colors for the slider, from top to bottom, are: Green, Yellow, Amber, Orange, Red"
+
+template describe(object, verbose, variant)
+    if object = "slider": "The Slider is a vertical bar with five sections of different size and color. The color sequence from top to bottom is green, yellow, amber, orange, and red. A triangular pointer should be sitting in one of the sections. This indicates the current slider level which is one of the five colors. Do you see it?"
+    if object = "pointer": "The pointer is found in the middle of a dial and must be set to a specific position to complete the module. Do you see it?"
+
+template describe(module, verbose, variant)
+    if verbose = "True"
+        if module = "dials module": "The Dials Module is made of one or more half dials which can be spread out across the dashboard. Each dial consists of several numbers and a pointer that is pointing to one of the numbers. Do you see it?"
+        if module = "button sequence module": "The Button Sequence Module is made of five round buttons in a single row. Each button has a border either in color or in grey. The ones with a border in color are clickable and the buttons with a grey border are not. All of them should have a grey fill color. Do you see it?"
+        if module = "switches module": "The Switches Module is made of four vertically stacked switches. Each switch should have a left and a right side. Do you see it?"
+        if module = "button array module": "The Button Array Module is made of four rows and three columns of round buttons. Each button should have a border in color and all but one button should have a grey fill color. The button with a fill color matching its border is the active button. Do you see it?"
+        if module = "warp_drive_percent": "The Warp Drive Power is shown in a horizontal display which has a grey fill color and a blue border. The power is given as a percentage. Do you see it?"
+
+template describe(*slots)
+    "I'm sorry, I didn't understand. Please rephrase?"
+#-------------Templates for System Explain---------------#
+
+# Dials Module
+template explain(num_half_dials, explanation, variant)
+    if num_half_dials = "2"
+        if explanation = "green_slider": "There are 2 half dials and the slider is set to green. "
+        if explanation = "left_dial_even": "There are 2 half dials, the slider is not green, and the pointer on the left dial is pointed to an even number. "
+        if explanation = "right_dial_right": "There are 2 half dials, the slider is not green, and the pointer on the right dial is pointed to the right. "
+        if explanation = "right_dial_not_right": "There are 2 half dials, the slider is not green, and the pointer on the right dial is not pointed to the right. "
+    if num_half_dials = "1"
+        if explanation = "green_slider": "There is one half-circle dial and the slider is set to green. "
+        if explanation = "less_ten": "There is one half-circle dial, it is pointing to a number less than ten, and the slider is green. "
+        if explanation = "even": "There is one dial, the slider is not green, and the dial is pointed to an even number. "
+        if explanation = "default": "There is one dial, it is not pointing to an even number, and the slider is not green. "
+
+# Button Sequence Module
+template explain(color_seq, num_enabled, explanation, variant)
+    "The complete sequence of clickable (colorful border) buttons is: {serialize_list(color_seq)}. "
+
+# Switch Module
+template explain(color_seq, slider, position, explanation, variant)
+    "The switch sequence so far is: {serialize_list(color_seq)}, and the slider is not green. "
+    if slider = "green"
+        "The switch sequence so far is: {serialize_list(color_seq)}, and the slider is green. "
+
+template explain(color_seq, position, explanation, variant)
+    "The switch sequence so far is: {serialize_list(color_seq)}. "
+
+# Button Array Module
+template explain(active_column, current_round, variant)
+    "This is the {decode_position(current_round)} round and the active button is in the {decode_position(active_column)} column. "
+
+
+
+
+#-------------Templates for System NextModule---------------#
+template nextmodule(first, module, variant)
+    if first = "True": " The first module is the {decode_module(module)}. {describe(module)}"
+    if first = "False": "The next module is the {decode_module(module)}. {describe(module)}"
+
+
+#------------System Confirms--------------#
+template confirmaction(variant): "Was the action performed successfully?"
+
+# seq_complete, current_switch_ind, and current_round might be given as parameters but they should not given to the user
+# check therefore first if one of the parameters is given to explicitly exclude it
+# if the name of the module is given, use it to disambiguate beliefs
+template confirm(seq_complete, module, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info_by_module", ", ", ", and ", module)}?"
+template confirm(seq_complete, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info", ", ", ", and ")}?"
+template confirm(current_switch_ind, module, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info_by_module", ", ", ", and ", module)}?"
+template confirm(current_switch_ind, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info", ", ", ", and ")}?"
+template confirm(current_round, variant): "I'm sorry, the module has reset, perhaps trying again will work better."
+template confirm(current_round, module, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info_by_module", ", ", ", and ", module)}?"
+template confirm(current_round, variant, *beliefs): "Is it correct that {for_entry(beliefs, "info", ", ", ", and ")}?"
+
+# if seq_complete, current_switch_ind, and current_round are not given, list all slots
+template confirm(module, variant, *beliefs): "Is it correct that: {for_entry(beliefs, "info_by_module", ", ", ", and ", module)}?"
+template confirm(variant, *beliefs): "Is it correct that: {for_entry(beliefs, "info", ", ", ", and ")}?"

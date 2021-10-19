@@ -1,0 +1,54 @@
+0. install requirements 
+    - nginx
+    - requirements.txt (pip)
+    - requirements_server.txt (pip)
+
+1. create file /etc/nginx/sites-available/adviser
+
+2. paste 
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  root /home/ubuntu/adviser2.0/test/client/dist;
+
+#  index index.html;
+
+#  server_name http://127.0.0.1;
+
+  location / {
+    try_files $uri $uri/ @rewrites;
+  }
+
+  location @rewrites {
+    rewrite ^(.+)$ /index.html last;
+  }
+
+
+  location ~* \.(?:ico|css|js|gif|jpe?g|png)$ {
+    # Some basic cache-control for static files to be sent to the browser
+    expires max;
+    add_header Pragma public;
+    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+  }
+
+  location /ws {
+    proxy_pass http://127.0.0.1:44123/ws;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}
+
+
+3. ln -s /etc/nginx/sites-available/adviser /etc/nginx/sites-enabled/
+
+4. cd ~/adviser2.0/test/client/
+
+5. npm install
+
+6. npm run build
+
+7. sudo systemctl restart nginx
+
+8. python newserver.py

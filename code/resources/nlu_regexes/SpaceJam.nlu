@@ -1,0 +1,243 @@
+# general rules
+
+rule hello(): "(\\b|^|\\ )(hi|hello|howdy|hey)\\b"
+rule bye(): "(\\b|^|\\ )(bye(-)?(bye)?|good(-)?bye|that'?s?\\ (is\\ )*all)(\\s|$|\\ |\\.)"
+rule deny(): "((no|wrong(?! button)|incorrect|nope|go back)|(not\\ (true|correct)))(\\s)?$"
+rule confirm(): "((yes|yeah|(\\b|^)ok\\b|(\\b|^)OK|okay|yup|i see it|(?<!not )sure|^y$|(\\b|^)yep(\\b|$)|(that('?s| is) )?(?<!not\\ )(?<!no\\ )(that('?s| is) right|correct|confirm| I do)))(\\s)?.*$"
+rule thanks(): "(?=.*(^(\\ )*)(((great|good|awesome|nice|cool)\\ )?((that((')?s|\\ (is|was))\\ (very\\ )?helpful)\\ )?(thank|thank(s|\\ you)(\\ (very|so)\\ much)?)(\\ (that((')?s|\\ (is|was))\\ (very\\ )?helpful))?|((great|good|awesome|nice|cool)\\ )?(that((')?s|\\ (is|was))\\ (very\\ )?helpful)|(great|good|awesome|nice|cool))((\\ )*))(?=^(?:(?!bye).)*$).*$"
+rule repeat(): "(\\b|^|\\ )(repeat((\\ that )|(\\ it))?)|(say((\\ that )|(\\ it))\\ again)|(what (do I|should I|am I supposed to) do)|(I (do not|don't) (understand|know what to do))"
+rule ack(): "(\\b|^)ok(ay)?\\b"
+rule restart(): "(\\b|^)(restart|start over|reset)\\b"
+rule bad(): "{IMPOSSIBLEREGEX()}"
+rule actioncomplete(): "((I)? did(?! not)(?!n't)(!?nt)( it| that)?|done|work(s|ed)|complete(d)?)"
+rule actionfail(): "((that |this |it |)?((did|does)(n't| not) work|(did )?fail(ed)?|was(n't| not) finished|false|error)|it(('s| is) not| isn't) working|buzzes|(don't| do not) think (it|that) worked|tried|won't let me|wrong button|messed up)"
+rule forgot(): "((I )?(do not|don't|can't|can not|cannot) remember|(I )?forg(e|o)t|which (one|button) (was (that|it)|did I|it was))"
+
+
+
+# inform
+rule inform(color)
+    "{color_synonyms(color)}"
+    "the colo(u)?r is {color_synonyms(color)}"
+    "it('s| is) {color_synonyms(color)}"
+    "the (switch|button|slider) is {color_synonyms(color)}"
+
+rule inform(object)
+    "(?<!what ){object_synonyms(object)}(?!\\?)"
+    "it('s| is) (a |an )?{object_synonyms(object)}(?!\\?)"
+
+
+rule inform(position)
+    "(the )?{position_synonyms(position)}"
+
+rule inform(direction)
+    "{direction}(?!(dial|pointer|one))"
+
+rule inform(module)
+    "(?<!what){module}(?!\\?)"
+
+rule inform(number)
+    "{number_synonyms(number)}"
+
+
+# negative inform
+rule negativeinform(color)
+    "not {color_synonyms(color)}"
+    "isn\\'?t {color_synonyms(color)}"
+    "the colo(u)?r is not {color_synonyms(color)}"
+    "(it(\\'s| not)|isn\\'?t) {color_synonyms(color)}"
+    "the (switch|button|slider) is not {color_synonyms(color)}"
+
+rule negativeinform(object)
+    "it(('s| is) not| isn\\'?t) (a |an )?{object}"
+
+rule negativeinform(module)
+    "it(('s| is) not| isn\\'?t) (a |an )?{module}"
+
+rule negativeinform(number)
+    "not {number_synonyms(number)}"
+    "isn\\'?t {number_synonyms(number)}"
+
+rule negativeinform(direction)
+    "not {direction}"
+    "isn\\'?t {direction}"
+
+rule negativeinform(position)
+    "not (the )?{position_synonyms(position)}"
+    "isn\\'?t (the )?{position_synonyms(position)}"
+
+
+# request description
+rule requestdescription(object)
+    "{object}\\?"
+    "(what|which) {object}"
+    "(what|which( one)?) is( the| a)? {object}"
+    "what does the {object} look like"
+
+rule requestdescription(color)
+    "(what|which)( are the)? colo(u)?r(s)?"
+    "colo(u)?r list"
+    "colo(u)?r(s)?\\?"
+
+rule requestdescription(module)
+    "{module_synonyms(module)}\\?"
+    "(what|which) {module_synonyms(module)}"
+    "(what|which( one)?) is( the| a)? {module_synonyms(module)}"
+    "what(')?s (a|the) {module_synonyms(module)}"
+
+rule requestdescription(position)
+    "(the )?{position_synonyms(position)}"
+    "(what|which( one)?) is( the)? {position_synonyms(position)}"
+
+
+# request explanation
+rule requestexplanation(): "Why\\?"
+# synonyms
+
+function color_synonyms(color)
+    "{color}"
+
+    if color = "orange"
+        "(?<!light )orange"
+        "dark orange"
+    add_if color = "blue"
+        "cyan"
+        "turquoise"
+    add_if color = "amber"
+        "light orange"
+    add_if color = "green"
+        "neon( green)?"
+    add_if color = "red"
+        "magenta"
+    add_if color = "grey"
+        "gray"
+        "no border"
+        "no color"
+        "none"
+
+function module_synonyms(module)
+    "{module}"
+    if module = "dials module"
+        "dial(s)?( module)?"
+    if module = "switches module"
+        "switch(es)?( module)?"
+    if module = "button array module"
+        "(button )?array( module)?"
+    if module = "button sequence module"
+        "(button )?sequence( module)?"
+
+function position_synonyms(position)
+    "{position}"
+
+    if position = "0"
+        "first"
+        "1\\."
+        "1st"
+    if position = "1"
+        "second"
+        "2\\."
+        "2nd"
+    if position = "2"
+        "third"
+        "3\\."
+        "3rd"
+    if position = "3"
+        "fourth"
+        "4\\."
+        "4th"
+    if position = "4"
+        "fifth"
+        "5\\."
+        "5th"
+
+function object_synonyms(object)
+    "{object}"
+    if object = "half_dial"
+        "half dial(s)?"
+        "half circle dial(s)?"
+        "pointer"
+        "(?<!left )(?<!right )dial(s)?"
+    if object = "full_dial"
+        "full dial(s)?"
+        "full cirlce dial(s)?"
+    if object = "left_dial"
+        "left dial"
+        "left one"
+        "left pointer"
+    if object = "right_dial"
+        "right dial"
+        "right one"
+        "right pointer"
+    if object = "enabled_button"
+        "button(s)?"
+        "enabled"
+        "clickable"
+        "colored"
+
+function number_synonyms(number)
+    "{number}"
+
+    if number = "0"
+        "zero"
+        "none"
+        "(\\b|^|\\ )no(?!t)(?! border)(?! color)(\\ |$)"
+    if number = "1"
+        "(\\b|^|\\ )(?<!which )(?<!another )one(?! more)"
+        "100"
+        "100%"
+    if number = "2"
+        "two"
+    if number = "3"
+        "three"
+    if number = "4"
+        "four"
+    if number = "5"
+        "five"
+    if number = "6"
+        "six"
+    if number = "7"
+        "seven"
+    if number = "8"
+        "eight"
+    if number = "9"
+        "nine"
+    if number = "10"
+        "ten"
+    if number = "11"
+        "eleven"
+    if number = "12"
+        "twelve"
+    if number = "13"
+        "thirteen"
+    if number = "14"
+        "fourteen"
+    if number = "15"
+        "fifteen"
+    if number = "16"
+        "sixteen"
+    if number = "17"
+        "seventeen"
+    if number = "18"
+        "eighteen"
+    if number = "19"
+        "nineteen"
+    if number = "20"
+        "twenty"
+    if number = "0.25"
+        "\\.25"
+        "25(\\s|$|\\ |\\.)"
+        "25%"
+    if number = "0.5"
+        "\\.5"
+        "50(\\s|$|\\ |\\.)"
+        "50%"
+    if number = "0.75"
+        "\\.75"
+        "75(\\s|$|\\ |\\.)"
+        "75%"
+    if number = "one more"
+        "another"
+
+
+# constants
+function IMPOSSIBLEREGEX(): "^\b$"
