@@ -41,5 +41,10 @@ For information on anonymous users, please see the full miscommunication table (
 * Data is structured so the user id appears first and then the user acts for each user turn in the dialog
 
 ## sys_acts.txt
-* Provides an automatically generated system act annotation for each system utterance (generated after the experiment, so may have some errors)
+* Provides an automatically generated system act annotations for each system utterance (generated after the experiment, so may have some errors)
 * Data is structured so the user id appears first and then the system acts for each system turn in the dialog
+
+## anonymized_full_log.txt
+* Contains the user and system utterances for each dialog
+* Each dialog is labled with the user id, the end condition (win/lose), and the time it took to complete the dialog (may not be entirely accurate)
+* Each dialog then contains the user and system utterances for each turn
