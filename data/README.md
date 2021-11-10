@@ -30,10 +30,10 @@ For information on anonymous users, please see the full miscommunication table (
 * The conent analysis documents are excel documents counting the number of times a code appeared in the user survery responses, these are broken into two files for clarity (what the user thougth was easy/hard for the dialog partner and the mental models they formed about the dialog partner) 
 * Annoations for both of these files were performed by two annotators not familiar with the experimental design or aims of the study
 
-## Miscommunication_annotations
+## Miscommunication_annotations.xlsx
 * Provides a more detailed/ human friendly representation of the data in `miscom_summary.csv`
 
-## MTurkTrustStudy_finalResultsWithDialogAnalysis
+## MTurkTrustStudy_finalResultsWithDialogAnalysis.xslx
 * Provides a summary of survery results and miscommunication annotations in one combined document
 
 ## user_acts.txt
