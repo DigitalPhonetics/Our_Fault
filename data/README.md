@@ -1,4 +1,6 @@
-# Miscommunication Annotations (miscom_summary.csv)
+# Sumary of data in this folder
+
+## Miscommunication Annotations (miscom_summary.csv)
 This is a summary document of the number of miscommunication events and the number of turns of miscommunication for each user who also filled out a survey.
 The document is a csv using `;` as the delimator
 
@@ -23,3 +25,21 @@ For information on anonymous users, please see the full miscommunication table (
   * 'restarts': **9** _(user restarts either the current module or refreshes the page and restarts the entire game)_
   * 'solves module without help': **10** _(user solves the module by trial and error without help from the system)_
   * 'unnoticed': **11** _(a misunderstanding is simply not noticed)_
+
+## ContentAnalysis
+* The conent analysis documents are excel documents counting the number of times a code appeared in the user survery responses, these are broken into two files for clarity (what the user thougth was easy/hard for the dialog partner and the mental models they formed about the dialog partner) 
+* Annoations for both of these files were performed by two annotators not familiar with the experimental design or aims of the study
+
+## Miscommunication_annotations
+* Provides a more detailed/ human friendly representation of the data in `miscom_summary.csv`
+
+## MTurkTrustStudy_finalResultsWithDialogAnalysis
+* Provides a summary of survery results and miscommunication annotations in one combined document
+
+## user_acts.txt
+* Provides an automatically generated user act annotation for each user utterance (the same one used by the system during the interaction)
+* Data is structured so the user id appears first and then the user acts for each user turn in the dialog
+
+## sys_acts.txt
+* Provides an automatically generated system act annotation for each system utterance (generated after the experiment, so may have some errors)
+* Data is structured so the user id appears first and then the system acts for each system turn in the dialog
